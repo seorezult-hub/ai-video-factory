@@ -1,0 +1,75 @@
+{
+  "name": "AI Video Factory — Assemble & Music",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "assemble-video",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-assemble",
+      "name": "Webhook: Assemble",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n# Download clips to temp dir\nTEMP_DIR=$(mktemp -d)\nCLIP_LIST=\"$TEMP_DIR/clips.txt\"\n\n# Download each clip\nCLIPS='{{ JSON.stringify($json.clips) }}'\necho $CLIPS | python3 -c \"\nimport sys, json, subprocess, os\nclips = json.load(sys.stdin)\ntemp_dir = os.environ.get('TEMP_DIR', '/tmp')\nfor i, url in enumerate(clips):\n    out = f'{temp_dir}/clip_{i:02d}.mp4'\n    subprocess.run(['curl', '-sL', url, '-o', out], check=True)\n    print(f'file {out}')\n\" > $CLIP_LIST\n\n# Download music if provided\nMUSIC_URL='{{ $json.musicUrl }}'\nMUSIC_ARG=''\nif [ -n \"$MUSIC_URL\" ] && [ \"$MUSIC_URL\" != \"null\" ]; then\n  curl -sL \"$MUSIC_URL\" -o \"$TEMP_DIR/music.mp3\"\n  MUSIC_ARG=\"-i $TEMP_DIR/music.mp3\"\nfi\n\n# Concatenate clips\nffmpeg -f concat -safe 0 -i \"$CLIP_LIST\" \\\n  -c:v libx264 -preset fast -crf 23 \\\n  \"$TEMP_DIR/merged.mp4\" -y 2>/dev/null\n\n# Mix with music if provided\nOUTPUT=\"$TEMP_DIR/final.mp4\"\nif [ -n \"$MUSIC_ARG\" ]; then\n  ffmpeg -i \"$TEMP_DIR/merged.mp4\" -i \"$TEMP_DIR/music.mp3\" \\\n    -c:v copy -c:a aac \\\n    -filter_complex \"[1:a]volume=0.3[music];[0:a][music]amix=inputs=2:duration=first\" \\\n    \"$OUTPUT\" -y 2>/dev/null\nelse\n  cp \"$TEMP_DIR/merged.mp4\" \"$OUTPUT\"\nfi\n\necho \"$OUTPUT\""
+      },
+      "id": "ffmpeg-assemble",
+      "name": "FFmpeg: Assemble",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/storage/v1/object/videos/final/{{ $json.brandName }}-{{ Date.now() }}.mp4",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "upload-r2",
+      "name": "Upload to Storage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ videoUrl: $env.SUPABASE_URL + '/storage/v1/object/public/videos/final/' + $node['FFmpeg: Assemble'].json.fileName }) }}"
+      },
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Assemble": {
+      "main": [[{ "node": "FFmpeg: Assemble", "type": "main", "index": 0 }]]
+    },
+    "FFmpeg: Assemble": {
+      "main": [[{ "node": "Upload to Storage", "type": "main", "index": 0 }]]
+    },
+    "Upload to Storage": {
+      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
