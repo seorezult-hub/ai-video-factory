@@ -33,6 +33,7 @@ Each scene object must have:
 Important: distribute the script content evenly across all scenes. Each scene should cover a distinct portion of the script.`;
 
 const DURATION_PARAMS: Record<string, { scenes: number; total: string }> = {
+  "15-single": { scenes: 1, total: "15 seconds continuous, single shot" },
   "15-30": { scenes: 3, total: "15–30 seconds" },
   "30-45": { scenes: 5, total: "30–45 seconds" },
   "45-60": { scenes: 7, total: "45–60 seconds" },
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
 
   let body: {
     scriptText: string;
-    videoDuration?: "15-30" | "30-45" | "45-60";
+    videoDuration?: "15-single" | "15-30" | "30-45" | "45-60";
     brandName?: string;
     brandColors?: string;
     mood?: string;
@@ -67,7 +68,7 @@ export async function POST(req: NextRequest) {
 
   const truncated = body.scriptText.slice(0, 3000);
   const { scenes: sceneCount, total: totalDuration } =
-    DURATION_PARAMS[body.videoDuration ?? "30-45"];
+    DURATION_PARAMS[body.videoDuration ?? "30-45"] ?? DURATION_PARAMS["30-45"];
 
   const userMessage = `Brand: ${body.brandName || "unknown"}
 Mood: ${body.mood || "not specified"}

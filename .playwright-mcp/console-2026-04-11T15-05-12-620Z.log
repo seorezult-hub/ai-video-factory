@@ -1,0 +1,19 @@
+[     974ms] [ERROR] Refused to apply style from 'https://clipgen.ru/_next/static/css/ffa61f0582b58b31.css' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled. @ https://clipgen.ru/:0
+[    1038ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/4bd1b696-cf72ae8a39fa05aa.js:0
+[    1038ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/4bd1b696-cf72ae8a39fa05aa.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1038ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/964-9e7fd12428968086.js:0
+[    1038ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/964-9e7fd12428968086.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1038ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/webpack-f10db5eeef251b15.js:0
+[    1038ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/webpack-f10db5eeef251b15.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1038ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/app/global-error-b469e602a7132dad.js:0
+[    1038ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/app/global-error-b469e602a7132dad.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1038ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/main-app-3d8605aa5b1b675d.js:0
+[    1038ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/main-app-3d8605aa5b1b675d.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1039ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/868-24aa17674d4057cf.js:0
+[    1039ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/868-24aa17674d4057cf.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1039ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/874-437a265a67d6cfee.js:0
+[    1039ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/874-437a265a67d6cfee.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1039ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://clipgen.ru/_next/static/chunks/app/page-5307d6903458aee6.js:0
+[    1039ms] [ERROR] Refused to execute script from 'https://clipgen.ru/_next/static/chunks/app/page-5307d6903458aee6.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. @ https://clipgen.ru/:0
+[    1133ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://clipgen.ru/favicon.ico:0
+[    4136ms] [WARNING] The resource https://clipgen.ru/_next/static/media/e4af272ccee01ff0-s.p.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ https://clipgen.ru/:0

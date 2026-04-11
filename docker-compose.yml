@@ -12,11 +12,11 @@ services:
     environment:
       - NODE_ENV=production
       - TRUST_PROXY=1
-      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-0efbef2e1d2b0e9cf8bb7856b94b77aee8dfd6fa9754a6d68ccad58ba4d37d93}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-}
     volumes:
       - /tmp:/tmp
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 3

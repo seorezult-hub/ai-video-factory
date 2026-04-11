@@ -23,7 +23,8 @@ type ScoreResult = {
 const PRIVATE_IP_RE = /^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1|0\.0\.0\.0)/;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const geminiKey = process.env.GEMINI_API_KEY;
+  const { resolveApiKey } = await import("@/lib/user-keys");
+  const geminiKey = await resolveApiKey("gemini", process.env.GEMINI_API_KEY);
   if (!geminiKey) {
     return NextResponse.json<ScoreResult>({ score: 75, grade: "B", feedback: "Gemini не настроен — оценка пропущена", tips: [] });
   }

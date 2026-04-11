@@ -100,7 +100,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const geminiKey = process.env.GEMINI_API_KEY;
+  const { resolveApiKey } = await import("@/lib/user-keys");
+  const geminiKey = await resolveApiKey("gemini", process.env.GEMINI_API_KEY);
   if (!geminiKey) {
     return NextResponse.json({ error: "GEMINI_API_KEY не настроен" }, { status: 500 });
   }

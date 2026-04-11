@@ -1,0 +1,22 @@
+[     575ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[   63061ms] [ERROR] %o
+
+%s TypeError: data.script.map is not a function
+    at StepScript (http://localhost:3000/_next/static/chunks/src_c0bc4c._.js:756:33)
+    at react-stack-bottom-frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:13403:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:2977:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:4732:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:5364:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:631:20)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:7955:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:7847:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:7830:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:7589:56)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js:8394:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_107ce8._.js:2353:64) The above error occurred in the <StepScript> component. It was handled by the <ReactDevOverlay> error boundary. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_523921._.js:1189
+[  228053ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775744067050-scene1.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  229132ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775744066412-scene3.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  229358ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775744069960-scene2.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  230496ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775744074937-scene5.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  231749ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775744073045-scene4.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  285461ms] [ERROR] Failed to load resource: the server responded with a status of 502 (Bad Gateway) @ http://localhost:3000/api/generate/video:0

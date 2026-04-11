@@ -1,0 +1,17 @@
+[     825ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    1829ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    2833ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    3837ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    4842ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    5846ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    6850ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    7852ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    8856ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[    9860ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[   10865ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[   11867ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3001/create:0
+[   12403ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[  143891ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775746864398-scene1.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  143927ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775746862455-scene3.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  148644ms] [WARNING] Image with src "https://xpnhydxwsbacuavcwmzb.supabase.co/storage/v1/object/public/videos/frames/1775746865701-scene2.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_4bb10e._.js:638
+[  475386ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/%7B%7B%20.supabaseUrl%20%7D%7D/storage/v1/object/public/videos/assembled/%7B%7B%20.brandName%20%7D%7D-%7B%7B%20.timestamp%20%7D%7D.mp4:0

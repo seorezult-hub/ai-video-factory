@@ -388,17 +388,22 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
 
       if (result.heroVariants?.length > 1) {
         setHeroVariants(result.heroVariants);
-      } else if (result.heroUrl) {
+        if (result.productUrl) {
+          const updated = [...data.uploadedImages];
+          while (updated.length <= 1) updated.push("");
+          updated[1] = result.productUrl;
+          onUpdate({ uploadedImages: updated });
+        }
+      } else if (result.heroUrl || result.productUrl) {
         const updated = [...data.uploadedImages];
-        while (updated.length <= 0) updated.push("");
-        updated[0] = result.heroUrl;
-        onUpdate({ uploadedImages: updated });
-      }
-
-      if (result.productUrl) {
-        const updated = [...data.uploadedImages];
-        while (updated.length <= 1) updated.push("");
-        updated[1] = result.productUrl;
+        if (result.heroUrl) {
+          while (updated.length <= 0) updated.push("");
+          updated[0] = result.heroUrl;
+        }
+        if (result.productUrl) {
+          while (updated.length <= 1) updated.push("");
+          updated[1] = result.productUrl;
+        }
         onUpdate({ uploadedImages: updated });
       }
 
