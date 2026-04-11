@@ -3,6 +3,7 @@ name: Deploy to Beget VPS
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
