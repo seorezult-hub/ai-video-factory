@@ -8,21 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Copy source to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: 155.212.141.8
-          username: root
-          password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22
-          source: "src/,public/,package.json,package-lock.json,next.config.ts,tsconfig.json,Dockerfile,docker-compose.yml,.env.example"
-          target: /opt/video-service
-          strip_components: 0
-
-      - name: Build and restart
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 155.212.141.8
@@ -30,6 +16,19 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
+            set -e
+            REPO="https://${{ secrets.GH_TOKEN_DEPLOY }}@github.com/seorezult-hub/ai-video-factory.git"
+
+            if [ ! -d /opt/video-service/.git ]; then
+              rm -rf /opt/video-service
+              git clone "$REPO" /opt/video-service
+            else
+              cd /opt/video-service
+              git remote set-url origin "$REPO"
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+
             cd /opt/video-service
             docker compose build app
             docker compose up -d
