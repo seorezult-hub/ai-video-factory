@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ai-video-factory:latest
+    container_name: ai-video-factory
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - TRUST_PROXY=1
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    volumes:
+      - /tmp:/tmp
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.video-factory.rule=Host(`clipgen.ru`)"
+      - "traefik.http.routers.video-factory.tls=true"
+      - "traefik.http.routers.video-factory.tls.certresolver=letsencrypt"
+      - "traefik.http.services.video-factory.loadbalancer.server.port=3000"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
