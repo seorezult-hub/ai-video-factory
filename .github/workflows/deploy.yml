@@ -31,53 +31,48 @@ jobs:
             fi
 
             cd /opt/video-service
+            [ -f .env ] || touch .env
 
-            if [ ! -f .env ]; then
-              touch .env
+            echo "=== Who else is claiming clipgen.ru on Traefik? ==="
+            # Traefik API (if exposed on localhost)
+            curl -s http://localhost:8080/api/http/routers 2>/dev/null | python3 -c "
+import json,sys
+try:
+  data = json.load(sys.stdin)
+  for r in data:
+    rule = r.get('rule','')
+    if 'clipgen' in rule.lower():
+      print(f\"  router: {r.get('name')}, service: {r.get('service')}, rule: {rule}, provider: {r.get('provider')}\")
+except: pass
+" || echo "Traefik API not on :8080"
+
+            # Inspect traefik container for file providers
+            TRAEFIK_ID=$(docker ps --filter "name=traefik" --format "{{.ID}}" | head -1)
+            if [ -n "$TRAEFIK_ID" ]; then
+              echo "=== Traefik file providers ==="
+              docker exec "$TRAEFIK_ID" sh -c "ls -la /etc/traefik/ 2>/dev/null; find /etc/traefik -name '*.yml' -o -name '*.toml' 2>/dev/null | head -5 | xargs -I {} sh -c 'echo --- {} ---; cat {}' 2>/dev/null" || true
+              echo "=== Traefik command args ==="
+              docker inspect "$TRAEFIK_ID" --format '{{range .Args}}{{println .}}{{end}}' | grep -i "provider\|file"
             fi
 
-            echo "=== next.config.ts on disk ==="
-            grep -c "api.groq.com" next.config.ts || echo "NOT FOUND"
-            grep -c "console.groq.com" next.config.ts || echo "ok - no console.groq"
-            echo ""
-
-            echo "=== Searching ENTIRE filesystem for containers with clipgen.ru or ai-video-factory image ==="
-            docker ps -a --format "{{.ID}} {{.Names}} {{.Image}}"
-            echo ""
-
-            echo "=== Nuke all ai-video-factory containers AND images ==="
-            docker ps -a --format "{{.ID}} {{.Image}}" | grep ai-video-factory | awk '{print $1}' | while read cid; do
-              docker stop "$cid" 2>/dev/null || true
-              docker rm -f "$cid" 2>/dev/null || true
-            done
+            # Nuke and rebuild
             docker compose down --remove-orphans 2>/dev/null || true
-
-            # Remove ALL cached images of ai-video-factory
             docker images --format "{{.ID}} {{.Repository}}" | grep ai-video-factory | awk '{print $1}' | while read iid; do
-              echo "Removing image $iid"
               docker rmi -f "$iid" 2>/dev/null || true
             done
 
-            # Clean builder cache to force full rebuild
-            docker builder prune -af 2>/dev/null || true
-
-            echo "=== Building fresh (no cache) ==="
             docker compose build --no-cache app
             docker compose up -d --force-recreate
 
             sleep 8
-            echo ""
-            echo "=== Final state ==="
-            docker ps --format "{{.ID}} | {{.Names}} | {{.Image}} | {{.Status}}"
 
-            # Sanity check: grep csp from inside the running container
-            CID=$(docker ps --filter "name=ai-video-factory" --format "{{.ID}}" | head -1)
-            if [ -n "$CID" ]; then
-              echo "=== next.config.ts INSIDE container ==="
-              docker exec "$CID" sh -c "cat /app/next.config.ts 2>/dev/null || find / -name next.config.ts -not -path '*/node_modules/*' 2>/dev/null | head -3 | xargs -I {} sh -c 'echo FOUND: {}; grep groq {}'"
-              echo ""
-              echo "=== curl from container to localhost ==="
-              docker exec "$CID" sh -c "wget -qO- --header='Host: clipgen.ru' http://localhost:3000/ 2>/dev/null | head -c 500" || true
+            # Test from INSIDE traefik network — bypass DNS
+            if [ -n "$TRAEFIK_ID" ]; then
+              echo "=== curl from traefik container to app ==="
+              docker exec "$TRAEFIK_ID" sh -c "wget -qO- -S --header='Host: clipgen.ru' http://ai-video-factory:3000/api/health 2>&1 | head -30" || true
             fi
+
+            echo "=== External curl to clipgen.ru ==="
+            curl -sI https://clipgen.ru/api/health 2>&1 | head -15 || true
 
             echo "✅ Deployed at $(date)"
