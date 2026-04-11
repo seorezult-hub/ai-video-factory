@@ -65,7 +65,7 @@ jobs:
               docker rmi -f "$iid" 2>/dev/null || true
             done
 
-            docker compose build app
+            docker compose build --no-cache app
             docker compose up -d --force-recreate
 
             sleep 8
