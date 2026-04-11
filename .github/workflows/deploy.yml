@@ -71,6 +71,9 @@ jobs:
             docker compose build --no-cache app
             docker compose up -d --force-recreate
 
+            # ── TRAEFIK FILE PROVIDER ────────────────────────────────────
+            cp /opt/video-service/traefik/clipgen.yml /opt/beget/n8n/traefik_data/dynamic/clipgen.yml
+
             sleep 30
             echo "=== Final containers ==="
             docker ps --format "{{.Names}} {{.Image}} {{.Status}}"

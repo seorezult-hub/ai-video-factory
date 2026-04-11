@@ -1,0 +1,14 @@
+http:
+  routers:
+    clipgen:
+      entryPoints:
+        - websecure
+      rule: Host(`clipgen.ru`)
+      service: clipgen
+      tls:
+        certResolver: mytlschallenge
+  services:
+    clipgen:
+      loadBalancer:
+        servers:
+          - url: http://ai-video-factory:3000
