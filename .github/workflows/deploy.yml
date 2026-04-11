@@ -17,7 +17,7 @@ jobs:
           port: 22
           script: |
             cd /opt/video-service
-            git pull https://${{ secrets.GITHUB_TOKEN_DEPLOY }}@github.com/seorezult-hub/ai-video-factory.git main
+            git pull https://${{ secrets.GH_TOKEN_DEPLOY }}@github.com/seorezult-hub/ai-video-factory.git main
             docker compose build app
             docker compose up -d
             echo "✅ Deployed at $(date)"
