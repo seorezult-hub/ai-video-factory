@@ -5,9 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI Video Factory — Create Professional AI Videos for Brands",
+  title: "AI Video Factory — Профессиональные AI-ролики для брендов",
   description:
-    "Create professional AI-powered promotional videos for your brand in 30-60 minutes. Step-by-step guided workflow.",
+    "Создавайте профессиональные AI-ролики для брендов за 30–60 минут. Пошаговый конструктор.",
 };
 
 export default function RootLayout({
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="ru" className="dark">
+      <body className={`${inter.className} bg-gray-950 text-white`}>{children}</body>
     </html>
   );
 }
