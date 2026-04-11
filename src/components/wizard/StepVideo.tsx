@@ -551,7 +551,11 @@ export function StepVideo({ data, onUpdate, onNext, onPrev }: Props) {
       saveSession(initialJobs, data.mood);
       startPolling();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Неизвестная ошибка");
+      if (e instanceof DOMException && e.name === "AbortError") {
+        setError("Сервис генерации видео не ответил за 60 сек. Проверьте интернет и попробуйте ещё раз.");
+      } else {
+        setError(e instanceof Error ? e.message : "Неизвестная ошибка при отправке сцен");
+      }
     } finally {
       setSubmitLoading(false);
     }

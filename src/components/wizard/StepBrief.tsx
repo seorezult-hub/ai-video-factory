@@ -209,7 +209,10 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
       fd.append("file", validFiles[0]);
       fd.append("key", key);
       const res = await fetch("/api/storage/upload", { method: "POST", body: fd });
-      if (!res.ok) throw new Error("Ошибка загрузки файла");
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error ?? `Ошибка загрузки файла (${res.status}). Попробуйте ещё раз.`);
+      }
       const { url } = await res.json();
 
       const idx = SLOT_INDEX[slot];
@@ -263,7 +266,10 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageUrl: currentUrl, enhanceType, slotType: SLOT_TO_TYPE[slot] }),
       });
-      if (!res.ok) throw new Error("Ошибка улучшения");
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error ?? "Не удалось улучшить изображение. Попробуйте ещё раз.");
+      }
       const { url } = await res.json();
 
       const updatedImages = [...data.uploadedImages];
