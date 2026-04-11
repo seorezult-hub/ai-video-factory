@@ -8,7 +8,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy source to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 155.212.141.8
+          username: root
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          source: "src/,public/,package.json,package-lock.json,next.config.ts,tsconfig.json,Dockerfile,docker-compose.yml,.env.example"
+          target: /opt/video-service
+          strip_components: 0
+
+      - name: Build and restart
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 155.212.141.8
@@ -17,7 +31,6 @@ jobs:
           port: 22
           script: |
             cd /opt/video-service
-            git pull https://${{ secrets.GH_TOKEN_DEPLOY }}@github.com/seorezult-hub/ai-video-factory.git main
             docker compose build app
             docker compose up -d
             echo "✅ Deployed at $(date)"
