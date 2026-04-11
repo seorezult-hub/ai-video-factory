@@ -1,0 +1,23 @@
+name: Deploy to Beget VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 155.212.141.8
+          username: root
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            cd /opt/video-service
+            git pull https://${{ secrets.GITHUB_TOKEN_DEPLOY }}@github.com/seorezult-hub/ai-video-factory.git main
+            docker compose build app
+            docker compose up -d
+            echo "✅ Deployed at $(date)"
