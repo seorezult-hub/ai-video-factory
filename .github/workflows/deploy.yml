@@ -32,28 +32,40 @@ jobs:
 
             cd /opt/video-service
 
-            # Ensure .env exists (create empty if missing)
             if [ ! -f .env ]; then
               touch .env
               echo "⚠️  .env was missing — created empty. Add real secrets to /opt/video-service/.env"
             fi
 
-            # Nuke any stale containers that might still claim clipgen.ru on Traefik
-            echo "=== Stale containers with clipgen.ru label ==="
-            docker ps -a --filter "label=traefik.http.routers.video-factory.rule=Host(\`clipgen.ru\`)" --format "{{.ID}} {{.Names}} {{.Image}}" || true
-            for cid in $(docker ps -a --format "{{.ID}} {{.Names}}" | grep -Ei "video|clipgen|next" | awk '{print $1}'); do
-              echo "Stopping/removing $cid"
-              docker stop "$cid" 2>/dev/null || true
-              docker rm -f "$cid" 2>/dev/null || true
-            done
+            echo "=== ALL containers BEFORE cleanup ==="
+            docker ps -a --format "{{.ID}} | {{.Names}} | {{.Image}} | {{.Status}}"
+            echo ""
 
-            docker compose down --remove-orphans || true
+            # Find ANY container that has clipgen.ru label OR uses ai-video-factory image
+            echo "=== Killing any container claiming clipgen.ru or using ai-video-factory image ==="
+            STALE=$(docker ps -a --format "{{.ID}}|{{.Names}}|{{.Image}}|{{.Labels}}" | \
+              grep -Ei "clipgen\.ru|ai-video-factory|video-service|next-app" || true)
+            if [ -n "$STALE" ]; then
+              echo "$STALE"
+              echo "$STALE" | awk -F'|' '{print $1}' | while read cid; do
+                echo "Killing $cid"
+                docker stop "$cid" 2>/dev/null || true
+                docker rm -f "$cid" 2>/dev/null || true
+              done
+            fi
+
+            # Also cleanup by compose project
+            docker compose -p video-service down --remove-orphans 2>/dev/null || true
+            docker compose down --remove-orphans 2>/dev/null || true
+
             docker compose build app
             docker compose up -d --force-recreate
 
             sleep 5
-            echo "=== Running containers ==="
-            docker ps --format "{{.Names}} {{.Image}} {{.Status}}"
-            echo "=== Health check ==="
-            docker compose ps
+            echo ""
+            echo "=== ALL containers AFTER deploy ==="
+            docker ps -a --format "{{.ID}} | {{.Names}} | {{.Image}} | {{.Status}}"
+            echo ""
+            echo "=== Traefik routers ==="
+            docker inspect $(docker ps --format "{{.ID}}") 2>/dev/null | grep -i "clipgen.ru" || true
             echo "✅ Deployed at $(date)"
