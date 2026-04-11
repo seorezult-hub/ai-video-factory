@@ -30,6 +30,13 @@ jobs:
             fi
 
             cd /opt/video-service
+
+            # Ensure .env exists (create empty if missing — secrets are set manually once)
+            if [ ! -f .env ]; then
+              touch .env
+              echo "⚠️  .env was missing — created empty. Add real secrets to /opt/video-service/.env"
+            fi
+
             docker compose build app
             docker compose up -d
             echo "✅ Deployed at $(date)"
