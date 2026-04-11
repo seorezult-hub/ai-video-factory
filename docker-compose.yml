@@ -24,6 +24,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.video-factory.rule=Host(`clipgen.ru`)"
+      - "traefik.http.routers.video-factory.entrypoints=websecure"
       - "traefik.http.routers.video-factory.tls=true"
       - "traefik.http.routers.video-factory.tls.certresolver=letsencrypt"
       - "traefik.http.services.video-factory.loadbalancer.server.port=3000"
