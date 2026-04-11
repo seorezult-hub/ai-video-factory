@@ -31,6 +31,8 @@ jobs:
             fi
 
             cd /opt/video-service
+            # Remove untracked files (e.g. leftover pages/_error.js from old sentry)
+            git clean -fdx --exclude=.env --exclude=.env.local
             [ -f .env ] || touch .env
 
             # ── KILL LEGACY PM2 ROUTE + PROCESS ─────────────────────────
