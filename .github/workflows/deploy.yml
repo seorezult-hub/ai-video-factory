@@ -71,9 +71,15 @@ jobs:
             docker compose build --no-cache app
             docker compose up -d --force-recreate
 
-            sleep 8
+            sleep 30
             echo "=== Final containers ==="
             docker ps --format "{{.Names}} {{.Image}} {{.Status}}"
+
+            echo "=== App container health ==="
+            docker inspect ai-video-factory --format '{{.State.Status}} health={{.State.Health.Status}}' || true
+
+            echo "=== App logs (last 30) ==="
+            docker logs ai-video-factory --tail 30 2>&1 || true
 
             echo "=== Docker networks ==="
             docker network ls
