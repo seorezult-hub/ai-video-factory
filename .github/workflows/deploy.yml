@@ -33,31 +33,19 @@ jobs:
             cd /opt/video-service
             [ -f .env ] || touch .env
 
-            echo "=== Who else is claiming clipgen.ru on Traefik? ==="
-            # Traefik API (if exposed on localhost)
-            curl -s http://localhost:8080/api/http/routers 2>/dev/null | python3 -c "
-import json,sys
-try:
-  data = json.load(sys.stdin)
-  for r in data:
-    rule = r.get('rule','')
-    if 'clipgen' in rule.lower():
-      print(f\"  router: {r.get('name')}, service: {r.get('service')}, rule: {rule}, provider: {r.get('provider')}\")
-except: pass
-" || echo "Traefik API not on :8080"
-
-            # Inspect traefik container for file providers
             TRAEFIK_ID=$(docker ps --filter "name=traefik" --format "{{.ID}}" | head -1)
             if [ -n "$TRAEFIK_ID" ]; then
+              echo "=== Traefik container configs ==="
+              docker inspect "$TRAEFIK_ID" --format '{{range .Args}}{{println .}}{{end}}' || true
               echo "=== Traefik file providers ==="
-              docker exec "$TRAEFIK_ID" sh -c "ls -la /etc/traefik/ 2>/dev/null; find /etc/traefik -name '*.yml' -o -name '*.toml' 2>/dev/null | head -5 | xargs -I {} sh -c 'echo --- {} ---; cat {}' 2>/dev/null" || true
-              echo "=== Traefik command args ==="
-              docker inspect "$TRAEFIK_ID" --format '{{range .Args}}{{println .}}{{end}}' | grep -i "provider\|file"
+              docker exec "$TRAEFIK_ID" sh -c 'ls -la /etc/traefik/ 2>/dev/null || true'
+              docker exec "$TRAEFIK_ID" sh -c 'find /etc/traefik -type f 2>/dev/null | xargs -I F sh -c "echo --- F ---; cat F"' 2>/dev/null || true
+              echo "=== Traefik mounted volumes ==="
+              docker inspect "$TRAEFIK_ID" --format '{{range .Mounts}}{{.Source}} -> {{.Destination}}{{println}}{{end}}' || true
             fi
 
-            # Nuke and rebuild
             docker compose down --remove-orphans 2>/dev/null || true
-            docker images --format "{{.ID}} {{.Repository}}" | grep ai-video-factory | awk '{print $1}' | while read iid; do
+            docker images --format "{{.ID}} {{.Repository}}" | grep ai-video-factory | awk "{print \$1}" | while read iid; do
               docker rmi -f "$iid" 2>/dev/null || true
             done
 
@@ -65,14 +53,12 @@ except: pass
             docker compose up -d --force-recreate
 
             sleep 8
+            echo "=== Running containers ==="
+            docker ps --format "{{.Names}} {{.Image}} {{.Status}}"
 
-            # Test from INSIDE traefik network — bypass DNS
             if [ -n "$TRAEFIK_ID" ]; then
               echo "=== curl from traefik container to app ==="
-              docker exec "$TRAEFIK_ID" sh -c "wget -qO- -S --header='Host: clipgen.ru' http://ai-video-factory:3000/api/health 2>&1 | head -30" || true
+              docker exec "$TRAEFIK_ID" sh -c 'wget -qO- -S --header="Host: clipgen.ru" http://ai-video-factory:3000/api/health 2>&1 | head -25' || true
             fi
-
-            echo "=== External curl to clipgen.ru ==="
-            curl -sI https://clipgen.ru/api/health 2>&1 | head -15 || true
 
             echo "✅ Deployed at $(date)"
