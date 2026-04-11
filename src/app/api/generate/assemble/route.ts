@@ -8,8 +8,6 @@ import os from "os";
 import { probeFFmpegTransitions, getSafeTransition } from "@/lib/ffmpeg-probe";
 import { checkRateLimitAsync, getClientIp } from "@/lib/rate-limit";
 
-// Запускаем probe при первом импорте модуля (один раз на warm instance)
-probeFFmpegTransitions().catch(e => console.error("[assemble] ffmpeg probe failed:", e));
 
 export const runtime = "nodejs";
 export const maxDuration = 300;

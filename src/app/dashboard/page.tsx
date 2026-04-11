@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LogoutButton } from "@/components/LogoutButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const cookieStore = await cookies();
   const supabase = createServerClient(

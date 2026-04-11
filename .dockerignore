@@ -5,6 +5,7 @@
 .gitignore
 node_modules
 .next
+.vercel
 *.log
 deploy.sh
 FINAL-BUG-REPORT.md
@@ -14,5 +15,13 @@ MONTAGE_BIBLE.md
 EXHAUSTIVE-AUDIT-PLAN.md
 SCRIPT-SYSTEM-DESIGN.md
 SESSION-HANDOFF.md
+DEEP-AUDIT-PLAN.md
+DEEP-AUDIT-V2.md
+FINAL-BUG-REPORT.md
 .claude
 .playwright-mcp
+# Cloudflare Pages конфиг — НЕ нужен в Docker (триггерит next-on-pages detection)
+wrangler.toml
+.wrangler
+# Supabase dev-only
+supabase/.temp

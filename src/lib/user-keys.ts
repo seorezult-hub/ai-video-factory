@@ -6,11 +6,6 @@ type ServiceKey = string | null;
 
 const ALGO = "aes-256-gcm";
 
-// BUG-004: проверка ENCRYPTION_KEY при загрузке модуля
-const _KEY_CHECK = process.env.ENCRYPTION_KEY;
-if (!_KEY_CHECK || _KEY_CHECK.length < 32) {
-  throw new Error("ENCRYPTION_KEY must be set (>=32 chars) at boot");
-}
 
 function getEncryptionKey(): Buffer | null {
   const hex = process.env.ENCRYPTION_KEY;
