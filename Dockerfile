@@ -4,7 +4,7 @@ RUN apk add --no-cache ffmpeg python3 make g++ libc6-compat
 WORKDIR /app
 COPY package*.json ./
 ENV NODE_ENV=development
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 COPY . .
 ENV SENTRY_DSN=""
 ENV ENCRYPTION_KEY="0efbef2e1d2b0e9cf8bb7856b94b77aee8dfd6fa9754a6d68ccad58ba4d37d93"
