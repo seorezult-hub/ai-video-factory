@@ -75,6 +75,19 @@ jobs:
             echo "=== Final containers ==="
             docker ps --format "{{.Names}} {{.Image}} {{.Status}}"
 
+            echo "=== Docker networks ==="
+            docker network ls
+
+            echo "=== Traefik networks ==="
+            TRAEFIK_ID=$(docker ps --filter "name=traefik" --format "{{.ID}}" | head -1)
+            docker inspect "$TRAEFIK_ID" --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}' || true
+
+            echo "=== app container networks ==="
+            docker inspect ai-video-factory --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}' || true
+
+            echo "=== Traefik labels on app ==="
+            docker inspect ai-video-factory --format '{{range $k,$v := .Config.Labels}}{{$k}}={{$v}}{{"\n"}}{{end}}' | grep traefik || true
+
             echo "=== External check ==="
             curl -sI https://clipgen.ru/api/health 2>&1 | head -15 || true
 
