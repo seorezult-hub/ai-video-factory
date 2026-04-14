@@ -540,6 +540,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
                 </div>
                 {(data.imageScores?.[idx] as ImageScore)?.grade === "C" || (data.imageScores?.[idx] as ImageScore)?.grade === "F" ? (
                   <button
+                    type="button"
                     onClick={() => setExpandedTips(expandedTips === idx ? null : idx)}
                     className="text-xs text-orange-400 hover:text-orange-300 underline"
                   >
@@ -547,7 +548,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
                   </button>
                 ) : null}
               </div>
-              <button onClick={() => removeImage(idx)} className="text-xs text-red-400 hover:text-red-300 shrink-0">Удалить</button>
+              <button type="button" onClick={() => removeImage(idx)} className="text-xs text-red-400 hover:text-red-300 shrink-0">Удалить</button>
             </div>
             {expandedTips === idx && (data.imageScores?.[idx] as ImageScore)?.tips?.length > 0 && (
               <ul className="bg-orange-500/10 border border-orange-500/20 rounded-lg px-3 py-2 space-y-1">
@@ -565,6 +566,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
               <div className="flex flex-wrap gap-2">
                 {(slot === "logo" || slot === "partner-logo" || slot === "product" || (data.imageScores?.[idx] as ImageScore)?.grade === "C" || (data.imageScores?.[idx] as ImageScore)?.grade === "F") && (
                   <button
+                    type="button"
                     onClick={() => enhanceImage(idx, slot, "remove-bg")}
                     className="text-xs bg-cyan-900/30 hover:bg-cyan-900/50 border border-cyan-500/30 text-cyan-300 px-2 py-1 rounded-lg transition-colors"
                     title="Удалить фон через fal-ai/imageutils/rembg (~$0.001)"
@@ -574,6 +576,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
                 )}
                 {((data.imageScores?.[idx] as ImageScore)?.grade === "C" || (data.imageScores?.[idx] as ImageScore)?.grade === "F" || (data.imageScores?.[idx] as ImageScore)?.score < 85) && (
                   <button
+                    type="button"
                     onClick={() => enhanceImage(idx, slot, "upscale")}
                     className="text-xs bg-indigo-900/30 hover:bg-indigo-900/50 border border-indigo-500/30 text-indigo-300 px-2 py-1 rounded-lg transition-colors"
                     title="Повысить разрешение ×4 через fal-ai/clarity-upscaler (~$0.03)"
@@ -583,6 +586,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
                 )}
                 {(slot === "logo" || slot === "partner-logo") && (
                   <button
+                    type="button"
                     onClick={() => enhanceImage(idx, slot, "both")}
                     className="text-xs bg-purple-900/30 hover:bg-purple-900/50 border border-purple-500/30 text-purple-300 px-2 py-1 rounded-lg transition-colors"
                     title="Убрать фон + повысить разрешение (~$0.03)"
@@ -594,6 +598,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
             )}
             {idx === 0 && (
               <button
+                type="button"
                 onClick={() => setShowCollageModal(true)}
                 className="w-full bg-purple-900/30 hover:bg-purple-900/50 border border-purple-500/30 hover:border-purple-500/60 text-purple-300 text-xs font-medium py-2 px-3 rounded-lg transition-all flex items-center justify-center gap-2"
               >
@@ -607,8 +612,8 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
             <div
               onDragOver={(e) => { e.preventDefault(); setDragOver(slot); }}
               onDragLeave={() => setDragOver(null)}
-              onDrop={(e) => { e.preventDefault(); setDragOver(null); uploadFiles(e.dataTransfer.files, slot); }}
-              onClick={() => inputRef.current?.click()}
+              onDrop={(e) => { e.preventDefault(); e.stopPropagation(); setDragOver(null); uploadFiles(e.dataTransfer.files, slot); }}
+              onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
               className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all duration-200 ${dragOver === slot ? "border-purple-400 bg-purple-500/10 scale-[1.01]" : "border-white/10 hover:border-purple-500/40 hover:bg-white/3"}`}
             >
               <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => e.target.files && uploadFiles(e.target.files, slot)} />
@@ -618,6 +623,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
             </div>
             {slot !== "partner-logo" && (
               <button
+                type="button"
                 onClick={() => setExpandedMJ(expandedMJ === slot ? null : slot)}
                 className="w-full text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 px-1"
               >
@@ -636,6 +642,7 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
                         {mj.text}
                       </div>
                       <button
+                        type="button"
                         onClick={async () => {
                           await navigator.clipboard.writeText(mj.text);
                           setCopiedMJ(slot);
@@ -1416,7 +1423,8 @@ export function StepBrief({ data, onUpdate, onNext }: Props) {
 
       {/* Кнопка Далее */}
       <button
-        onClick={onNext}
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
         disabled={!isValid}
         className="w-full relative bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:via-indigo-500 hover:to-purple-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl text-lg transition-all duration-300 shadow-xl shadow-purple-900/40 hover:shadow-purple-900/60 hover:scale-[1.01] active:scale-[0.99]"
         style={{ backgroundSize: "200% auto" }}
