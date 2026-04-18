@@ -11,4 +11,4 @@ http:
     clipgen:
       loadBalancer:
         servers:
-          - url: http://ai-video-factory:3000
+          - url: http://videofactory-app:3000
